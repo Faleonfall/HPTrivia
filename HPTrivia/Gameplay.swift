@@ -1,6 +1,6 @@
 //
 //  Gameplay.swift
-//  HP Trivia
+//  HPTrivia
 //
 //  Created by Volodymyr Kryvytskyi on 01.12.2024.
 //
@@ -10,7 +10,7 @@ import AVKit
 
 struct Gameplay: View {
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var game: Game
+    @Environment(Game.self) private var game
     @Namespace private var namespace
     @State private var musicPlayer: AVAudioPlayer!
     @State private var sfxPlayer: AVAudioPlayer!
@@ -258,7 +258,7 @@ struct Gameplay: View {
                     Spacer()
                     
                     if tappedCorrectAnswer {
-                        Text(game.correctAnswer)
+                        Text(game.currentQuestion.answer)
                             .minimumScaleFactor(0.5)
                             .multilineTextAlignment(.center)
                             .padding(10)
@@ -314,7 +314,7 @@ struct Gameplay: View {
             animateViewsIn = true
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                playMusic()
+                //playMusic()
             }
         }
     }
@@ -355,5 +355,5 @@ struct Gameplay: View {
 
 #Preview {
     Gameplay()
-        .environmentObject(Game())
+        .environment(Game())
 }

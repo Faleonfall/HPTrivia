@@ -1,18 +1,12 @@
 //
 //  Store.swift
-//  HP Trivia
+//  HPTrivia
 //
 //  Created by Volodymyr Kryvytskyi on 03.12.2024.
 //
 
 import Foundation
 import StoreKit
-
-enum BookStatus: Codable {
-    case active
-    case inactive
-    case locked
-}
 
 @MainActor
 class Store: ObservableObject {

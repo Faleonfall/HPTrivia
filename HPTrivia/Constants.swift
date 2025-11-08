@@ -1,6 +1,6 @@
 //
 //  Constants.swift
-//  HP Trivia
+//  HPTrivia
 //
 //  Created by Volodymyr Kryvytskyi on 01.12.2024.
 //
@@ -9,13 +9,11 @@ import SwiftUI
 
 enum Constants {
     static let hpFont = "PartyLetPlain"
-    
-    static let previewQuestion = try! JSONDecoder().decode([Question].self, from: Data(contentsOf: Bundle.main.url(forResource: "trivia", withExtension: "json")!))[0]
 }
 
 struct InfoBackgroundImage: View {
     var body: some View {
-        Image("parchment")
+        Image(.parchment)
             .resizable()
             .ignoresSafeArea()
             .background(.brown)
@@ -23,12 +21,12 @@ struct InfoBackgroundImage: View {
 }
 
 extension Button {
-    func doneButton() -> some View {
+    @MainActor func doneButton() -> some View {
         self
             .font(.largeTitle)
             .padding()
             .buttonStyle(.borderedProminent)
-            .tint(.brown)
+            .tint(.brown.mix(with: .brown, by: 0.2))
             .foregroundStyle(.white)
     }
 }

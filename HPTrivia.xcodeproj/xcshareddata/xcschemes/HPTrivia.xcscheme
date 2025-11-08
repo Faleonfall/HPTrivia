@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1610"
+   LastUpgradeVersion = "2610"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "FA59C8722CFB2718002F06CC"
-               BuildableName = "HP Trivia.app"
-               BlueprintName = "HP Trivia"
-               ReferencedContainer = "container:HP Trivia.xcodeproj">
+               BuildableName = "HPTrivia.app"
+               BlueprintName = "HPTrivia"
+               ReferencedContainer = "container:HPTrivia.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,14 +45,11 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "FA59C8722CFB2718002F06CC"
-            BuildableName = "HP Trivia.app"
-            BlueprintName = "HP Trivia"
-            ReferencedContainer = "container:HP Trivia.xcodeproj">
+            BuildableName = "HPTrivia.app"
+            BlueprintName = "HPTrivia"
+            ReferencedContainer = "container:HPTrivia.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <StoreKitConfigurationFileReference
-         identifier = "../../HP Trivia/HPConfig.storekit">
-      </StoreKitConfigurationFileReference>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -65,9 +62,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "FA59C8722CFB2718002F06CC"
-            BuildableName = "HP Trivia.app"
-            BlueprintName = "HP Trivia"
-            ReferencedContainer = "container:HP Trivia.xcodeproj">
+            BuildableName = "HPTrivia.app"
+            BlueprintName = "HPTrivia"
+            ReferencedContainer = "container:HPTrivia.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
