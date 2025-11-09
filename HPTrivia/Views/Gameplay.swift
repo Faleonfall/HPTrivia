@@ -11,12 +11,13 @@ import AVKit
 struct Gameplay: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(Game.self) private var game
+    
     @Namespace private var namespace
+    
     @State private var musicPlayer: AVAudioPlayer!
     @State private var sfxPlayer: AVAudioPlayer!
     @State private var animateViewsIn = false
     @State private var tappedCorrectAnswer = false
-    @State private var hintWiggle = false
     @State private var scaleNextButton = false
     @State private var movePointsToScore = false
     @State private var revealHint = false
@@ -72,14 +73,14 @@ struct Gameplay: View {
                                     .scaledToFit()
                                     .frame(width: 100)
                                     .foregroundStyle(.cyan)
-                                    .rotationEffect(.degrees(hintWiggle ? -13 : -17))
                                     .padding()
                                     .padding(.leading, 20)
                                     .transition(.offset(x: -geo.size.width / 2))
-                                    .onAppear {
-                                        withAnimation(.easeInOut(duration: 0.1).repeatCount(9).delay(5).repeatForever()) {
-                                            hintWiggle = true
-                                        }
+                                    .phaseAnimator([false, true]) { content, phase in
+                                        content
+                                            .rotationEffect(.degrees(phase ? -13 : -17))
+                                    } animation: { _ in
+                                            .easeInOut(duration: 0.7)
                                     }
                                     .onTapGesture {
                                         withAnimation(.easeOut(duration: 1)) {
@@ -91,11 +92,11 @@ struct Gameplay: View {
                                     }
                                     .rotation3DEffect(.degrees(revealHint ? 1440 : 0), axis: (x: 0, y: 1, z: 0))
                                     .scaleEffect(revealHint ? 5 : 1)
-                                    .opacity(revealHint ? 0 : 1)
                                     .offset(x: revealHint ? geo.size.width / 2 : 0)
+                                    .opacity(revealHint ? 0 : 1)
                                     .overlay {
                                         Text(game.currentQuestion.hint)
-                                            .padding(.leading, 33)
+                                            .padding(.leading, 20)
                                             .minimumScaleFactor(0.5)
                                             .multilineTextAlignment(.center)
                                             .opacity(revealHint ? 1 : 0)
@@ -119,14 +120,14 @@ struct Gameplay: View {
                                     .frame(width: 100, height: 100)
                                     .background(.cyan)
                                     .clipShape(.rect(cornerRadius: 20))
-                                    .rotationEffect(.degrees(hintWiggle ? 13 : 17))
                                     .padding()
                                     .padding(.trailing, 20)
                                     .transition(.offset(x: geo.size.width / 2))
-                                    .onAppear {
-                                        withAnimation(.easeInOut(duration: 0.1).repeatCount(9).delay(5).repeatForever()) {
-                                            hintWiggle = true
-                                        }
+                                    .phaseAnimator([false, true]) { content, phase in
+                                        content
+                                            .rotationEffect(.degrees(phase ? 13 : 17))
+                                    } animation: { _ in
+                                            .easeInOut(duration: 0.7)
                                     }
                                     .onTapGesture {
                                         withAnimation(.easeOut(duration: 1)) {
@@ -136,15 +137,15 @@ struct Gameplay: View {
                                         playFlipSound()
                                         game.questionScore -= 1
                                     }
-                                    .rotation3DEffect(.degrees(revealBook ? 1440 : 0), axis: (x: 0, y: 1, z: 0))
+                                    .rotation3DEffect(.degrees(revealBook ? -1440 : 0), axis: (x: 0, y: 1, z: 0))
                                     .scaleEffect(revealBook ? 5 : 1)
-                                    .opacity(revealBook ? 0 : 1)
                                     .offset(x: revealBook ? -geo.size.width / 2 : 0)
+                                    .opacity(revealBook ? 0 : 1)
                                     .overlay {
                                         Image("hp\(game.currentQuestion.book)")
                                             .resizable()
                                             .scaledToFit()
-                                            .padding(.trailing, 33)
+                                            .padding(.trailing, 20)
                                             .opacity(revealBook ? 1 : 0)
                                             .scaleEffect(revealBook ? 1.33 : 1)
                                     }
@@ -311,9 +312,13 @@ struct Gameplay: View {
         }
         .ignoresSafeArea()
         .onAppear() {
-            animateViewsIn = true
+            game.startGame()
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                animateViewsIn = true
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 //playMusic()
             }
         }
@@ -323,6 +328,7 @@ struct Gameplay: View {
         let songs = ["let-the-mystery-unfold", "spellcraft", "hiding-place-in-the-forest", "deep-in-the-dell"]
         
         let sound = Bundle.main.path(forResource: songs.randomElement(), ofType: "mp3")
+        
         musicPlayer = try! AVAudioPlayer(contentsOf: URL(filePath: sound!))
         musicPlayer.volume = 0.1
         musicPlayer.numberOfLoops = -1

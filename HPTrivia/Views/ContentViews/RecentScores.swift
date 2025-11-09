@@ -36,4 +36,5 @@ struct RecentScores: View {
 
 #Preview {
     RecentScores(animateViewsIn: .constant(true))
+        .environment(Game())
 }
