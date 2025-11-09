@@ -36,7 +36,7 @@ struct ButtonBar: View {
 #Preview {
     GeometryReader { geo in
         ButtonBar(playGame: .constant(false), animateViewsIn: .constant(true), geo: geo)
-            .environmentObject(Store())
+            .environment(Store())
             .environment(Game())
             .frame(width: geo.size.width, height: 120)
             .background(Color.black.opacity(0.2))

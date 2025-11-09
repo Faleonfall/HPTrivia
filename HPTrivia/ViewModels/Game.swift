@@ -9,7 +9,7 @@ import SwiftUI
 
 @Observable
 class Game {
-    private let savePath = FileManager.documentsDirectory.appending(path: "SavedScores")
+    private let savePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appending(path: "RecentScore")
     
     var bookQuestions = BookQuestions()
     
@@ -21,6 +21,10 @@ class Game {
     var answeredQuestions: [Int] = []
     var currentQuestion = try! JSONDecoder().decode([Question].self, from: Data(contentsOf: Bundle.main.url(forResource: "trivia", withExtension: "json")!))[0]
     var answers: [String] = []
+    
+    init() {
+        loadScores()
+    }
     
     func startGame() {
         for book in bookQuestions.books {
@@ -61,19 +65,20 @@ class Game {
     func correct() {
         answeredQuestions.append(currentQuestion.id)
         
-        gameScore += questionScore
+        withAnimation {
+            gameScore += questionScore
+        }
     }
     
     func endGame() {
         recentScores[2] = recentScores[1]
         recentScores[1] = recentScores[0]
         recentScores[0] = gameScore
+        saveScores()
         
         gameScore = 0
         activeQuestion = []
         answeredQuestions = []
-        
-        saveScores()
     }
     
     private func saveScores() {
@@ -81,7 +86,7 @@ class Game {
             let data = try JSONEncoder().encode(recentScores)
             try data.write(to: savePath)
         } catch {
-            print("Unable to save data: ", error)
+            print("Unable to save data: \(error)")
         }
     }
     

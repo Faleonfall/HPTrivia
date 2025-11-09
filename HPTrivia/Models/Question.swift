@@ -14,13 +14,4 @@ struct Question: Codable {
     var wrong: [String]
     let book: Int
     let hint: String
-    
-    // Built from decoded fields; not stored in JSON.
-    var answers: [String: Bool] {
-        var map: [String: Bool] = [answer: true]
-        for w in wrong {
-            map[w] = false
-        }
-        return map
-    }
 }

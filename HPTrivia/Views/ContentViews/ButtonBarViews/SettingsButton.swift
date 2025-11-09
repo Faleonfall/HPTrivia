@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SettingsButton: View {
-    @EnvironmentObject private var store: Store
+    @Environment(Store.self) private var store
     @State private var showSettings = false
 
     @Binding var animateViewsIn: Bool
@@ -29,7 +29,7 @@ struct SettingsButton: View {
                 .transition(.offset(x: geo.size.width / 4))
                 .sheet(isPresented: $showSettings) {
                     SelectBooks()
-                        .environmentObject(store)
+                        .environment(store)
                 }
             }
         }
@@ -43,7 +43,7 @@ struct SettingsButton: View {
 #Preview {
     GeometryReader { geo in
         SettingsButton(animateViewsIn: .constant(true), geo: geo)
-            .environmentObject(Store())
+            .environment(Store())
             .environment(Game())
             .frame(width: geo.size.width, height: geo.size.height)
     }

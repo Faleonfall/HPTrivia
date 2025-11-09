@@ -9,16 +9,18 @@ import SwiftUI
 import AVFAudio
 
 struct PlayButton: View {
-    @EnvironmentObject private var store: Store
     @Environment(Game.self) private var game
 
     @State private var scalePlayButton = false
-    @State private var audioPlayer: AVAudioPlayer!
     
     @Binding var playGame: Bool
     @Binding var animateViewsIn: Bool
     
     let geo: GeometryProxy
+    
+    private var hasActiveBooks: Bool {
+        game.bookQuestions.books.contains { $0.status == .active }
+    }
     
     var body: some View {
         VStack {
@@ -32,7 +34,7 @@ struct PlayButton: View {
                         .foregroundStyle(.white)
                         .padding(.vertical, 7)
                         .padding(.horizontal, 50)
-                        .background(store.books.contains(.active) ? .brown : .gray)
+                        .background(hasActiveBooks ? .brown : .gray)
                         .clipShape(.rect(cornerRadius: 7))
                         .shadow(radius: 5)
                         .scaleEffect(scalePlayButton ? 1.2 : 1)
@@ -43,7 +45,7 @@ struct PlayButton: View {
                         }
                 }
                 .transition(.offset(y: geo.size.height / 3))
-                .disabled(store.books.contains(.active) ? false : true)
+                .disabled(!hasActiveBooks)
             }
         }
         .animation(.easeOut(duration: 0.7).delay(2), value: animateViewsIn)
@@ -53,7 +55,6 @@ struct PlayButton: View {
 #Preview {
     GeometryReader { geo in
         PlayButton(playGame: .constant(false), animateViewsIn: .constant(true), geo: geo)
-            .environmentObject(Store())
             .environment(Game())
             .frame(width: geo.size.width, height: geo.size.height)
     }

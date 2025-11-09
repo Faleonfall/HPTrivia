@@ -9,7 +9,7 @@ import SwiftUI
 import AVKit
 
 struct ContentView: View {
-    @EnvironmentObject private var store: Store
+    @Environment(Store.self) private var store
     @Environment(Game.self) private var game
     @State private var audioPlayer: AVAudioPlayer!
     @State private var animateViewsIn = false
@@ -62,6 +62,6 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .environmentObject(Store())
+        .environment(Store())
         .environment(Game())
 }

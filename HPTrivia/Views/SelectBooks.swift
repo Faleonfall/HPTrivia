@@ -11,7 +11,7 @@ struct SelectBooks: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(Game.self) private var game
     
-    @EnvironmentObject private var store: Store
+    private var store = Store()
     
     var activeBooks: Bool {
         for book in game.bookQuestions.books {
@@ -36,31 +36,23 @@ struct SelectBooks: View {
                 ScrollView {
                     LazyVGrid(columns: [GridItem(), GridItem()]) {
                         ForEach(game.bookQuestions.books) { book in
-                            if book.status == .active || (book.status == .locked && store.purchaseIDs.contains("hp\(book.id)")) {
+                            if book.status == .active || (book.status == .locked && store.purchased.contains(book.image)) {
                                 ActiveBook(book: book)
                                     .onTapGesture {
                                         game.bookQuestions.changeStatus(of: book.id, to: .inactive)
-                                        store.saveStatus()
                                     }
                                     .task {
-                                        // Ensure active on appear if purchased
                                         game.bookQuestions.changeStatus(of: book.id, to: .active)
-                                        store.saveStatus()
                                     }
                             } else if book.status == .inactive {
                                 InactiveBook(book: book)
                                     .onTapGesture {
-                                        // Toggle to active
                                         game.bookQuestions.changeStatus(of: book.id, to: .active)
-                                        store.saveStatus()
                                     }
                             } else {
                                 LockedBook(book: book)
                                     .onTapGesture {
-                                        // Books 4...7 are purchasable; align to Store.products index 0...3
-                                        let productIndex = book.id - 4
-                                        guard productIndex >= 0, productIndex < store.products.count else { return }
-                                        let product = store.products[productIndex]
+                                        let product = store.products[book.id - 4]
                                         
                                         Task {
                                             await store.purchase(product)
@@ -78,6 +70,8 @@ struct SelectBooks: View {
                 }
                 
                 Button("Done") {
+                    game.bookQuestions.saveStatus()
+                    
                     dismiss()
                 }
                 .doneButton()
@@ -85,12 +79,15 @@ struct SelectBooks: View {
             }
             .foregroundStyle(.black)
         }
-        .interactiveDismissDisabled(!activeBooks)
+        .interactiveDismissDisabled()
+        .task {
+            await store.loadProducts()
+        }
     }
 }
 
 #Preview {
     SelectBooks()
-        .environmentObject(Store())
+        .environment(Store())
         .environment(Game())
 }

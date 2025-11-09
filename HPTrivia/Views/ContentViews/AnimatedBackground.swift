@@ -13,6 +13,7 @@ struct AnimatedBackground: View {
     var body: some View {
         Image(.hogwarts)
             .resizable()
+            .scaledToFill()
             .frame(width: geo.size.width * 3, height: geo.size.height)
             .padding(.top, 3)
             .phaseAnimator([false, true]) {
@@ -22,6 +23,8 @@ struct AnimatedBackground: View {
             } animation: { _ in
                     .linear(duration: 60)
             }
+            .clipped()
+            .ignoresSafeArea()
     }
 }
 
