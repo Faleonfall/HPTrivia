@@ -13,6 +13,7 @@ struct ContentView: View {
     @Environment(Game.self) private var game
     @State private var audioPlayer: AVAudioPlayer!
     @State private var animateViewsIn = false
+    @State private var playGame = false
     
     var body: some View {
         GeometryReader { geo in
@@ -28,7 +29,7 @@ struct ContentView: View {
                     
                     Spacer()
                     
-                    ButtonBar(animateViewsIn: $animateViewsIn, geo: geo)
+                    ButtonBar(playGame: $playGame, animateViewsIn: $animateViewsIn, geo: geo)
                     
                     Spacer()
                 }
@@ -38,7 +39,16 @@ struct ContentView: View {
         .ignoresSafeArea()
         .onAppear {
             animateViewsIn = true
-            //playAudio()
+            playAudio()
+        }
+        .fullScreenCover(isPresented: $playGame) {
+            Gameplay()
+                .onAppear() {
+                    audioPlayer.setVolume(0, fadeDuration: 2)
+                }
+                .onDisappear() {
+                    audioPlayer.setVolume(1, fadeDuration: 3)
+                }
         }
     }
     
@@ -46,7 +56,7 @@ struct ContentView: View {
         let sound = Bundle.main.path(forResource: "magic-in-the-air", ofType: "mp3")
         audioPlayer = try! AVAudioPlayer(contentsOf: URL(filePath: sound!))
         audioPlayer.numberOfLoops = -1
-        audioPlayer.play()
+        //audioPlayer.play()
     }
 }
 

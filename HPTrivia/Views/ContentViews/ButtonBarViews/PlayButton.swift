@@ -14,8 +14,8 @@ struct PlayButton: View {
 
     @State private var scalePlayButton = false
     @State private var audioPlayer: AVAudioPlayer!
-    @State private var playGame = false
     
+    @Binding var playGame: Bool
     @Binding var animateViewsIn: Bool
     
     let geo: GeometryProxy
@@ -24,7 +24,6 @@ struct PlayButton: View {
         VStack {
             if animateViewsIn {
                 Button {
-                    // Filtering is performed inside startGame()
                     game.startGame()
                     playGame.toggle()
                 } label: {
@@ -44,16 +43,6 @@ struct PlayButton: View {
                         }
                 }
                 .transition(.offset(y: geo.size.height / 3))
-                .fullScreenCover(isPresented: $playGame) {
-                    Gameplay()
-                        .environment(game)
-                        .onAppear {
-                            audioPlayer.setVolume(0, fadeDuration: 2)
-                        }
-                        .onDisappear {
-                            audioPlayer.setVolume(1, fadeDuration: 3)
-                        }
-                }
                 .disabled(store.books.contains(.active) ? false : true)
             }
         }
@@ -63,7 +52,7 @@ struct PlayButton: View {
 
 #Preview {
     GeometryReader { geo in
-        PlayButton(animateViewsIn: .constant(true), geo: geo)
+        PlayButton(playGame: .constant(false), animateViewsIn: .constant(true), geo: geo)
             .environmentObject(Store())
             .environment(Game())
             .frame(width: geo.size.width, height: geo.size.height)

@@ -30,7 +30,7 @@ struct RecentScores: View {
                 .transition(.opacity)
             }
         }
-        .animation(.linear(duration: 1).delay(4), value: animateViewsIn)
+        .animation(.linear(duration: 1).delay(3.5), value: animateViewsIn)
     }
 }
 
