@@ -1,15 +1,8 @@
-//
-//  AnimatedBackground.swift
-//  HPTrivia
-//
-//  Created by Volodymyr Kryvytskyi on 08.11.25.
-//
-
 import SwiftUI
 
 struct AnimatedBackground: View {
     let geo: GeometryProxy
-    
+
     var body: some View {
         Image(.hogwarts)
             .resizable()

@@ -18,7 +18,7 @@ Package.resolved
 # CocoaPods
 Pods/
 *.xcworkspace
-!default.xcworkspace # Keep only if you intentionally created one
+!default.xcworkspace
 
 # Carthage
 Carthage/Build/

@@ -1,42 +1,31 @@
 # HP Trivia
 
-A SwiftUI app inspired by the Wizarding World.  
-Test your HP knowledge through dynamic trivia gameplay – featuring animated UI, immersive sound effects powered by AVKit, and StoreKit integration for an engaging, polished experience.
+A SwiftUI trivia game inspired by the Wizarding World. Test your HP knowledge with animated questions, scoring, hints, book reveals, sound effects, and StoreKit-backed unlocks.
 
----
+## Features
 
-## 🧭 Features
+- HP-themed trivia questions grouped by book
+- Animated home screen, gameplay transitions, and answer feedback
+- Hint and book reveal mechanics that affect score
+- Recent score tracking
+- Sound effects and menu music using AVFAudio
+- StoreKit configuration for simulated in-app purchases
+- Generated launch screen, no storyboard
 
-* Interactive HP-themed trivia questions  
-* Smooth animated transitions and visual feedback  
-* Magical sound design using **AVKit**  
-* Dynamic question logic with scoring system  
-* Hint and book reveal animations  
-* StoreKit integration for reviews and in-app actions  
-* Fully reactive SwiftUI game architecture  
+## Tech
 
----
+- Swift 6
+- SwiftUI
+- iOS 18+
+- AVFAudio
+- StoreKit
 
-## 📸 Preview
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/9b183035-fb50-4ad1-a0b3-6eaa414ca4a1"
-       alt="HP Trivia Screenshot"
-       width="300"/>
-</p>
+## Structure
 
----
-
-## 🛠️ Tech Stack
-
-* **Language:** Swift 6  
-* **Framework:** SwiftUI  
-* **Platform:** iOS 18+  
-* **Audio:** AVKit  
-* **Monetization / Reviews:** StoreKit  
-* **Architecture:** State-driven SwiftUI environment with reactive updates  
-
----
-
-## 📦 About
-
-Built as a learning project to explore advanced SwiftUI animations, reactive game-state management, and system integrations like AVKit and StoreKit – all wrapped in a magical, animation-driven experience for HP trivia fans.
+```text
+HPTrivia/
+  Controllers/   Game state, question bank, StoreKit
+  Models/        Book, Question, theme helpers
+  Views/         Screens and reusable components
+  Resources/     Assets, audio, StoreKit config, trivia data
+```

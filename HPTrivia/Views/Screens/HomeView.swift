@@ -1,36 +1,24 @@
-//
-//  ContentView.swift
-//  HPTrivia
-//
-//  Created by Volodymyr Kryvytskyi on 30.11.2024.
-//
-
 import SwiftUI
-import AVKit
+import AVFAudio
 
-struct ContentView: View {
+struct HomeView: View {
     @Environment(Store.self) private var store
     @Environment(Game.self) private var game
-    @State private var audioPlayer: AVAudioPlayer!
+    @State private var musicPlayer: AVAudioPlayer?
     @State private var animateViewsIn = false
     @State private var playGame = false
-    
+
     var body: some View {
         GeometryReader { geo in
             ZStack {
                 AnimatedBackground(geo: geo)
-                
+
                 VStack {
                     GameTitle(animateViewsIn: $animateViewsIn)
-                    
                     Spacer()
-                    
                     RecentScores(animateViewsIn: $animateViewsIn)
-                    
                     Spacer()
-                    
                     ButtonBar(playGame: $playGame, animateViewsIn: $animateViewsIn, geo: geo)
-                    
                     Spacer()
                 }
             }
@@ -39,29 +27,38 @@ struct ContentView: View {
         .ignoresSafeArea()
         .onAppear {
             animateViewsIn = true
-            playAudio()
+            playMusic()
         }
         .fullScreenCover(isPresented: $playGame) {
             Gameplay()
-                .onAppear() {
-                    audioPlayer.setVolume(0, fadeDuration: 2)
+                .environment(store)
+                .environment(game)
+                .onAppear {
+                    musicPlayer?.setVolume(0, fadeDuration: 2)
                 }
-                .onDisappear() {
-                    audioPlayer.setVolume(1, fadeDuration: 3)
+                .onDisappear {
+                    musicPlayer?.setVolume(0.2, fadeDuration: 2)
                 }
         }
     }
-    
-    private func playAudio() {
-        let sound = Bundle.main.path(forResource: "magic-in-the-air", ofType: "mp3")
-        audioPlayer = try! AVAudioPlayer(contentsOf: URL(filePath: sound!))
-        audioPlayer.numberOfLoops = -1
-        //audioPlayer.play()
+
+    // MARK: - Audio
+
+    private func playMusic() {
+        guard musicPlayer == nil,
+              let url = Bundle.main.url(forResource: "magic-in-the-air", withExtension: "mp3"),
+              let player = try? AVAudioPlayer(contentsOf: url)
+        else { return }
+
+        player.volume = 0.2
+        player.numberOfLoops = -1
+        player.play()
+        musicPlayer = player
     }
 }
 
 #Preview {
-    ContentView()
+    HomeView()
         .environment(Store())
         .environment(Game())
 }

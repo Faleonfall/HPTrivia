@@ -1,10 +1,3 @@
-//
-//  Question.swift
-//  HPTrivia
-//
-//  Created by Volodymyr Kryvytskyi on 03.12.2024.
-//
-
 import Foundation
 
 struct Question: Codable {
@@ -14,4 +7,13 @@ struct Question: Codable {
     var wrong: [String]
     let book: Int
     let hint: String
+
+    static let placeholder = Question(
+        id: 0,
+        question: "",
+        answer: "",
+        wrong: [],
+        book: 0,
+        hint: ""
+    )
 }

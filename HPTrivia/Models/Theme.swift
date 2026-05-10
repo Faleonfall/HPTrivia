@@ -1,13 +1,6 @@
-//
-//  Constants.swift
-//  HPTrivia
-//
-//  Created by Volodymyr Kryvytskyi on 01.12.2024.
-//
-
 import SwiftUI
 
-enum Constants {
+enum Theme {
     static let hpFont = "PartyLetPlain"
 }
 
@@ -34,7 +27,6 @@ extension Button {
 extension FileManager {
     static var documentsDirectory: URL {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        
         return paths[0]
     }
 }
