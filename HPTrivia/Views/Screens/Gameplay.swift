@@ -1,12 +1,11 @@
 import SwiftUI
-import AVFAudio
 
 struct Gameplay: View {
     @Environment(Game.self) private var game
     @Environment(\.dismiss) private var dismiss
     @Namespace private var namespace
 
-    @State private var sfxPlayer: AVAudioPlayer?
+    @State private var sfx = AudioPlayer()
 
     @State private var animateViewsIn = false
     @State private var revealHint = false
@@ -39,7 +38,8 @@ struct Gameplay: View {
                                     .transition(.scale)
                             }
                         }
-                        .animation(.easeInOut(duration: animateViewsIn ? 2 : 0), value: animateViewsIn)
+                        .animation(
+                            .easeInOut(duration: animateViewsIn ? 2 : 0), value: animateViewsIn)
                         Spacer()
                         HintBar(
                             question: game.currentQuestion,
@@ -49,12 +49,12 @@ struct Gameplay: View {
                             width: geo.size.width,
                             revealHintAction: {
                                 revealHint = true
-                                playFlipSound()
+                                sfx.play(Sound.flip)
                                 game.questionScore -= 1
                             },
                             revealBookAction: {
                                 revealBook = true
-                                playFlipSound()
+                                sfx.play(Sound.flip)
                                 game.questionScore -= 1
                             }
                         )
@@ -69,8 +69,10 @@ struct Gameplay: View {
                                                     withAnimation(.easeOut(duration: 1)) {
                                                         tappedCorrectAnswer = true
                                                     }
-                                                    playCorrectSound()
-                                                    DispatchQueue.main.asyncAfter(deadline: .now() + 3.5) {
+                                                    sfx.play(Sound.correct)
+                                                    DispatchQueue.main.asyncAfter(
+                                                        deadline: .now() + 3.5
+                                                    ) {
                                                         game.correct()
                                                     }
                                                 } label: {
@@ -78,16 +80,24 @@ struct Gameplay: View {
                                                         .minimumScaleFactor(0.5)
                                                         .multilineTextAlignment(.center)
                                                         .padding(10)
-                                                        .frame(width: geo.size.width / 2.15, height: 80)
+                                                        .frame(
+                                                            width: geo.size.width / 2.15, height: 80
+                                                        )
                                                         .background(.green.opacity(0.5))
                                                         .clipShape(.rect(cornerRadius: 25))
                                                         .matchedGeometryEffect(id: 1, in: namespace)
                                                 }
-                                                .transition(.asymmetric(insertion: .scale, removal: .scale(scale: 15).combined(with: .opacity)))
+                                                .transition(
+                                                    .asymmetric(
+                                                        insertion: .scale,
+                                                        removal: .scale(scale: 15).combined(
+                                                            with: .opacity)))
                                             }
                                         }
                                     }
-                                    .animation(.easeOut(duration: animateViewsIn ? 1 : 0).delay(animateViewsIn ? 1.5 : 0), value: animateViewsIn)
+                                    .animation(
+                                        .easeOut(duration: animateViewsIn ? 1 : 0).delay(
+                                            animateViewsIn ? 1.5 : 0), value: animateViewsIn)
                                 } else {
                                     VStack {
                                         if animateViewsIn {
@@ -95,7 +105,7 @@ struct Gameplay: View {
                                                 withAnimation(.easeOut(duration: 1)) {
                                                     wrongAnswersTapped.append(answer)
                                                 }
-                                                playWrongSound()
+                                                sfx.play(Sound.wrong)
                                                 game.questionScore -= 1
                                             } label: {
                                                 Text(answer)
@@ -103,16 +113,24 @@ struct Gameplay: View {
                                                     .multilineTextAlignment(.center)
                                                     .padding(10)
                                                     .frame(width: geo.size.width / 2.15, height: 80)
-                                                    .background(wrongAnswersTapped.contains(answer) ? .red.opacity(0.5) : .green.opacity(0.5))
+                                                    .background(
+                                                        wrongAnswersTapped.contains(answer)
+                                                            ? .red.opacity(0.5)
+                                                            : .green.opacity(0.5)
+                                                    )
                                                     .clipShape(.rect(cornerRadius: 25))
-                                                    .scaleEffect(wrongAnswersTapped.contains(answer) ? 0.8 : 1)
+                                                    .scaleEffect(
+                                                        wrongAnswersTapped.contains(answer)
+                                                            ? 0.8 : 1)
                                             }
                                             .transition(.scale)
                                             .sensoryFeedback(.error, trigger: wrongAnswersTapped)
                                             .disabled(wrongAnswersTapped.contains(answer))
                                         }
                                     }
-                                    .animation(.easeOut(duration: animateViewsIn ? 1 : 0).delay(animateViewsIn ? 1.5 : 0), value: animateViewsIn)
+                                    .animation(
+                                        .easeOut(duration: animateViewsIn ? 1 : 0).delay(
+                                            animateViewsIn ? 1.5 : 0), value: animateViewsIn)
                                 }
                             }
                         }
@@ -153,30 +171,6 @@ struct Gameplay: View {
                 animateViewsIn = true
             }
         }
-    }
-
-    // MARK: - Audio
-
-    private func playFlipSound() {
-        playSoundEffect("page-flip")
-    }
-
-    private func playWrongSound() {
-        playSoundEffect("negative-beeps")
-    }
-
-    private func playCorrectSound() {
-        playSoundEffect("magic-wand")
-    }
-
-    private func playSoundEffect(_ resource: String) {
-        sfxPlayer = makeAudioPlayer(for: resource)
-        sfxPlayer?.play()
-    }
-
-    private func makeAudioPlayer(for resource: String) -> AVAudioPlayer? {
-        guard let url = Bundle.main.url(forResource: resource, withExtension: "mp3") else { return nil }
-        return try? AVAudioPlayer(contentsOf: url)
     }
 }
 

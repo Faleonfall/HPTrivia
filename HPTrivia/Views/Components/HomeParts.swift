@@ -1,5 +1,88 @@
 import SwiftUI
 
+// MARK: - Background
+
+struct AnimatedBackground: View {
+    let geo: GeometryProxy
+
+    var body: some View {
+        Image(.hogwarts)
+            .resizable()
+            .scaledToFill()
+            .frame(width: geo.size.width * 3, height: geo.size.height)
+            .padding(.top, 3)
+            .phaseAnimator([false, true]) {
+                content, phase in
+                content
+                    .offset(x: phase ? geo.size.width / 1.1 : -geo.size.width / 1.1)
+            } animation: { _ in
+                .linear(duration: 60)
+            }
+            .clipped()
+            .ignoresSafeArea()
+    }
+}
+
+// MARK: - Title
+
+struct GameTitle: View {
+    @Binding var animateViewsIn: Bool
+
+    var body: some View {
+        VStack {
+            if animateViewsIn {
+                VStack {
+                    Image(systemName: "bolt.fill")
+                        .font(.title)
+                        .imageScale(.large)
+
+                    Text("HP")
+                        .font(.custom(Theme.hpFont, size: 70))
+                        .padding(.bottom, -50)
+
+                    Text("Trivia")
+                        .font(.custom(Theme.hpFont, size: 60))
+                }
+                .padding(.top, 70)
+                .transition(.move(edge: .top))
+            }
+        }
+        .animation(.easeOut(duration: 0.7).delay(2), value: animateViewsIn)
+    }
+}
+
+// MARK: - Scores
+
+struct RecentScores: View {
+    @Environment(Game.self) private var game
+    @Binding var animateViewsIn: Bool
+
+    var body: some View {
+        VStack {
+            if animateViewsIn {
+                VStack {
+                    Text("Recent scores")
+                        .font(.title2)
+
+                    Text("\(game.recentScores[0])")
+                    Text("\(game.recentScores[1])")
+                    Text("\(game.recentScores[2])")
+                }
+                .font(.title3)
+                .padding(.horizontal)
+                .padding(.vertical, 8)
+                .foregroundStyle(.white)
+                .background(.black.opacity(0.5))
+                .clipShape(.rect(cornerRadius: 15))
+                .transition(.opacity)
+            }
+        }
+        .animation(.linear(duration: 1).delay(3.5), value: animateViewsIn)
+    }
+}
+
+// MARK: - Button bar
+
 struct ButtonBar: View {
     @Binding var playGame: Bool
     @Binding var animateViewsIn: Bool
@@ -19,8 +102,6 @@ struct ButtonBar: View {
         .padding(.vertical)
     }
 }
-
-// MARK: - Buttons
 
 private struct InstructionsButton: View {
     @State private var showInstructions = false
@@ -70,11 +151,15 @@ private struct PlayButton: View {
                         .padding(.vertical, 12)
                         .padding(.horizontal, 34)
                         .background(hasActiveBooks ? .brown : .gray, in: Capsule())
-                        .shadow(color: .black.opacity(hasActiveBooks ? 0.35 : 0.15), radius: 8, y: 4)
+                        .shadow(
+                            color: .black.opacity(hasActiveBooks ? 0.35 : 0.15), radius: 8, y: 4
+                        )
                         .phaseAnimator([false, true]) { content, phase in
                             content
                                 .scaleEffect(hasActiveBooks && phase ? 1.04 : 1)
-                                .shadow(color: .yellow.opacity(hasActiveBooks && phase ? 0.35 : 0), radius: phase ? 10 : 0)
+                                .shadow(
+                                    color: .yellow.opacity(hasActiveBooks && phase ? 0.35 : 0),
+                                    radius: phase ? 10 : 0)
                         } animation: { _ in
                             .easeInOut(duration: 1.8)
                         }
@@ -116,10 +201,19 @@ private struct SettingsButton: View {
 
 #Preview {
     GeometryReader { geo in
-        ButtonBar(playGame: .constant(false), animateViewsIn: .constant(true), geo: geo)
-            .environment(Store())
-            .environment(Game())
-            .frame(width: geo.size.width, height: 120)
-            .background(Color.black.opacity(0.2))
+        ZStack {
+            AnimatedBackground(geo: geo)
+            VStack {
+                GameTitle(animateViewsIn: .constant(true))
+                Spacer()
+                RecentScores(animateViewsIn: .constant(true))
+                Spacer()
+                ButtonBar(playGame: .constant(false), animateViewsIn: .constant(true), geo: geo)
+                Spacer()
+            }
+        }
     }
+    .ignoresSafeArea()
+    .environment(Store())
+    .environment(Game())
 }

@@ -17,10 +17,18 @@ struct Instructions: View {
                         .font(.largeTitle)
                         .padding()
                     VStack(alignment: .leading, spacing: 20) {
-                        Text("Welcome to HP Trivia! In this game, you will be asked random questions from the HP books and you must guess the right answer or you will lose points! 😱")
-                        Text("Each question is worth 5 points. But if you guess a wrong answer, you loose 1 point.")
-                        Text("There are hints in this game. You may press a hint or a book button. It will help you. But these buttons reduces your points too.")
-                        Text("When you select the correct answer, you will be awarded all the points left for that question.")
+                        Text(
+                            "Welcome to HP Trivia! In this game, you will be asked random questions from the HP books and you must guess the right answer or you will lose points! 😱"
+                        )
+                        Text(
+                            "Each question is worth 5 points. But if you guess a wrong answer, you loose 1 point."
+                        )
+                        Text(
+                            "There are hints in this game. You may press a hint or a book button. It will help you. But these buttons reduces your points too."
+                        )
+                        Text(
+                            "When you select the correct answer, you will be awarded all the points left for that question."
+                        )
                     }
                     .font(.title3)
                     .padding(.horizontal)

@@ -57,8 +57,9 @@ struct HintBar: View {
             }
         }
         .padding(.leading, 24)
-        .animation(.easeOut(duration: animateViewsIn ? 1.5 : 0)
-            .delay(animateViewsIn ? 2 : 0), value: animateViewsIn)
+        .animation(
+            .easeOut(duration: animateViewsIn ? 1.5 : 0)
+                .delay(animateViewsIn ? 2 : 0), value: animateViewsIn)
     }
 
     private var bookTile: some View {
@@ -83,8 +84,9 @@ struct HintBar: View {
             }
         }
         .padding(.trailing, 24)
-        .animation(.easeOut(duration: animateViewsIn ? 1.5 : 0)
-            .delay(animateViewsIn ? 2 : 0), value: animateViewsIn)
+        .animation(
+            .easeOut(duration: animateViewsIn ? 1.5 : 0)
+                .delay(animateViewsIn ? 2 : 0), value: animateViewsIn)
     }
 }
 
@@ -163,7 +165,10 @@ struct CelebrationView: View {
                     .font(.largeTitle)
                     .padding(.top, 50)
                     .transition(.offset(y: -height / 4))
-                    .offset(x: movePointsToScore ? width / 2.3 : 0, y: movePointsToScore ? -height / 13 : 0)
+                    .offset(
+                        x: movePointsToScore ? width / 2.3 : 0,
+                        y: movePointsToScore ? -height / 13 : 0
+                    )
                     .opacity(movePointsToScore ? 0 : 1)
                     .onAppear {
                         withAnimation(.easeInOut(duration: 1).delay(3)) {

@@ -10,6 +10,9 @@ xcuserdata/
 DerivedData/
 build/
 
+# Isolated CLI build output (scripts/xc.sh)
+.build-cli/
+
 # Swift Package Manager
 .swiftpm/
 .build/

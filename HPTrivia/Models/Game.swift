@@ -1,14 +1,18 @@
 import SwiftUI
 
+// Round state: the pool of active questions, the current question, and the
+// score. Persists the recent score history to the documents directory.
 @Observable
-class Game {
+final class Game {
+    static let startingQuestionScore = 5
+
     private let savePath = FileManager.documentsDirectory.appending(path: "RecentScore")
 
     var questionBank = QuestionBank()
 
     var gameScore = 0
-    var questionScore = 5
-    var recentScores = [0, 0, 0]
+    var questionScore = Game.startingQuestionScore
+    var recentScores = Scores.empty
 
     var activeQuestions: [Question] = []
     var answeredQuestions = Set<Int>()
@@ -30,14 +34,15 @@ class Game {
     }
 
     func newQuestion() {
-        guard !activeQuestions.isEmpty else { return }
-        if answeredQuestions.count == activeQuestions.count {
+        if answeredQuestions.count >= activeQuestions.count {
             answeredQuestions.removeAll()
         }
-        let unansweredQuestions = activeQuestions.filter { !answeredQuestions.contains($0.id) }
-        currentQuestion = unansweredQuestions.randomElement() ?? activeQuestions[0]
-        answers = ([currentQuestion.answer] + currentQuestion.wrong).shuffled()
-        questionScore = 5
+        guard let question = Questions.next(from: activeQuestions, answered: answeredQuestions)
+        else { return }
+
+        currentQuestion = question
+        answers = ([question.answer] + question.wrong).shuffled()
+        questionScore = Self.startingQuestionScore
     }
 
     // MARK: - Score
@@ -50,9 +55,7 @@ class Game {
     }
 
     func endGame() {
-        recentScores[2] = recentScores[1]
-        recentScores[1] = recentScores[0]
-        recentScores[0] = gameScore
+        recentScores = Scores.recording(gameScore, in: recentScores)
         saveScores()
         gameScore = 0
         activeQuestions = []
@@ -73,9 +76,9 @@ class Game {
     func loadScores() {
         do {
             let data = try Data(contentsOf: savePath)
-            recentScores = try JSONDecoder().decode([Int].self, from: data)
+            recentScores = Scores.normalized(try JSONDecoder().decode([Int].self, from: data))
         } catch {
-            recentScores = [0, 0, 0]
+            recentScores = Scores.empty
         }
     }
 }

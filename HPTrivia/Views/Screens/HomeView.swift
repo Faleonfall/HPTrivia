@@ -1,10 +1,12 @@
 import SwiftUI
-import AVFAudio
 
 struct HomeView: View {
+    // Menu music volume. Fades to silence while a round is on screen.
+    private static let musicVolume: Float = 0.2
+
     @Environment(Store.self) private var store
     @Environment(Game.self) private var game
-    @State private var musicPlayer: AVAudioPlayer?
+    @State private var music = AudioPlayer()
     @State private var animateViewsIn = false
     @State private var playGame = false
 
@@ -27,33 +29,19 @@ struct HomeView: View {
         .ignoresSafeArea()
         .onAppear {
             animateViewsIn = true
-            playMusic()
+            music.loop(Sound.menuMusic, volume: Self.musicVolume)
         }
         .fullScreenCover(isPresented: $playGame) {
             Gameplay()
                 .environment(store)
                 .environment(game)
                 .onAppear {
-                    musicPlayer?.setVolume(0, fadeDuration: 2)
+                    music.fade(to: 0, over: 2)
                 }
                 .onDisappear {
-                    musicPlayer?.setVolume(0.2, fadeDuration: 2)
+                    music.fade(to: Self.musicVolume, over: 2)
                 }
         }
-    }
-
-    // MARK: - Audio
-
-    private func playMusic() {
-        guard musicPlayer == nil,
-              let url = Bundle.main.url(forResource: "magic-in-the-air", withExtension: "mp3"),
-              let player = try? AVAudioPlayer(contentsOf: url)
-        else { return }
-
-        player.volume = 0.2
-        player.numberOfLoops = -1
-        player.play()
-        musicPlayer = player
     }
 }
 

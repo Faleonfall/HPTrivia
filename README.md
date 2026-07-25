@@ -1,31 +1,55 @@
-# HP Trivia
+# HP Trivia ⚡️
 
-A SwiftUI trivia game inspired by the Wizarding World. Test your HP knowledge with animated questions, scoring, hints, book reveals, sound effects, and StoreKit-backed unlocks.
+An iOS trivia game set in the Wizarding World.
+Asks questions from the books, trades points for hints, and unlocks later books through StoreKit.
 
-## Features
+<p align="center">
+  <img src="docs/home.webp" alt="Home screen" width="320">
+</p>
 
-- HP-themed trivia questions grouped by book
-- Animated home screen, gameplay transitions, and answer feedback
-- Hint and book reveal mechanics that affect score
-- Recent score tracking
-- Sound effects and menu music using AVFAudio
-- StoreKit configuration for simulated in-app purchases
-- Generated launch screen, no storyboard
+---
 
-## Tech
+## 🧭 Features
 
-- Swift 6
-- SwiftUI
-- iOS 18+
-- AVFAudio
-- StoreKit
+* Questions grouped by book, with the last four locked behind purchases
+* Animated home screen, gameplay transitions, and answer feedback
+* Hint and book reveal tiles that cost a point each
+* Recent score tracking across the last three games
+* Sound effects and looping menu music
+* Generated launch screen and Info.plist, no storyboard
 
-## Structure
+---
 
-```text
-HPTrivia/
-  Controllers/   Game state, question bank, StoreKit
-  Models/        Book, Question, theme helpers
-  Views/         Screens and reusable components
-  Resources/     Assets, audio, StoreKit config, trivia data
+## 🛠️ Tech Stack
+
+* **Language:** Swift 6
+* **UI:** SwiftUI
+* **Platform:** iOS 18.0+
+* **Architecture:** MV with observable state and pure rule services
+* **Dependencies:** none
+
+---
+
+## 🚀 Setup
+
+```bash
+git config core.hooksPath .githooks   # enable swift-format pre-commit hook
+open HPTrivia.xcodeproj
 ```
+
+Build and run from Xcode, or use the CLI helper:
+
+```bash
+scripts/xc.sh build   # build for the pinned simulator
+scripts/xc.sh test    # run the unit tests
+```
+
+---
+
+## 📦 About
+
+A learning project rebuilding a trivia game around SwiftUI animations. Question picking, book
+grouping, and score history live in `GameRules` as pure functions, so the rules are covered by
+tests without touching the UI.
+
+Based on [this Udemy course](https://www.udemy.com/share/105Kw03@MsOVQvQjQxfRA4CRYG1dC2IVV1nYO0O0fLligAm5ImYq1S2nNAgWwW-D8RgHBCD_8w==/).

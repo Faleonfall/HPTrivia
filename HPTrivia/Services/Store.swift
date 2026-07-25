@@ -1,8 +1,10 @@
 import StoreKit
 
+// StoreKit facade for the four purchasable books. Owns the product list and
+// the set of entitlements the rest of the app checks against.
 @MainActor
 @Observable
-class Store {
+final class Store {
     var products: [Product] = []
     var purchased = Set<String>()
 
